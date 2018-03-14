@@ -1,11 +1,11 @@
 import os
 
 from attrdict import AttrDict
-from deepsense import neptune
+# from deepsense import neptune
 
 from utils import read_params, multi_roc_auc_score
-
-ctx = neptune.Context()
+# ctx = neptune.Context()
+ctx = None
 params = read_params(ctx)
 
 X_COLUMNS = ['comment_text_english']

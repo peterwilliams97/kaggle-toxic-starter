@@ -1,23 +1,25 @@
 import os
 import shutil
 import subprocess
-
 import click
 import numpy as np
 import pandas as pd
-from deepsense import neptune
+from offline import PURE_OFFLINE
+if not PURE_OFFLINE:
+    from deepsense import neptune
 from sklearn.model_selection import StratifiedKFold
 
 from pipeline_config import SOLUTION_CONFIG, Y_COLUMNS, CV_LABELS, ID_LABEL
 from pipelines import PIPELINES
 from preprocessing import split_train_data, translate_data
-from utils import init_logger, get_logger, read_params, read_data, read_predictions, multi_roc_auc_score, \
-    create_submission, create_predictions_df, save_submission
+from utils import (init_logger, get_logger, read_params, read_data, read_predictions,
+    multi_roc_auc_score, create_submission, create_predictions_df, save_submission)
+
 
 RANDOM_STATE = 1234
 
 logger = get_logger()
-ctx = neptune.Context()
+ctx = None if PURE_OFFLINE else neptune.Context()
 params = read_params(ctx)
 
 
@@ -29,15 +31,18 @@ def action():
 @action.command()
 def translate_to_english():
     logger.info('translating train')
-    translate_data(data_dir=params.data_dir, filename='train.csv', filename_translated='train_translated.csv')
+    translate_data(data_dir=params.data_dir, filename='train.csv',
+                   filename_translated='train_translated.csv')
     logger.info('translating test')
-    translate_data(data_dir=params.data_dir, filename='test.csv', filename_translated='test_translated.csv')
+    translate_data(data_dir=params.data_dir, filename='test.csv',
+                   filename_translated='test_translated.csv')
 
 
 @action.command()
 def train_valid_split():
     logger.info('preprocessing training data')
-    split_train_data(data_dir=params.data_dir, filename='train_translated.csv', target_columns=CV_LABELS,
+    split_train_data(data_dir=params.data_dir, filename='train_translated.csv',
+                     target_columns=CV_LABELS,
                      n_splits=params.n_cv_splits)
 
 

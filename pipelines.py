@@ -5,9 +5,10 @@ from postprocessing import Blender
 from steps.base import Step, Dummy, sparse_hstack_inputs, to_tuple_inputs
 from steps.keras.loaders import Tokenizer
 from steps.keras.models import GloveEmbeddingsMatrix, Word2VecEmbeddingsMatrix, FastTextEmbeddingsMatrix
-from steps.preprocessing import XYSplit, TextCleaner, TfidfVectorizer, WordListFilter, Normalizer, TextCounter, \
-    MinMaxScaler, MinMaxScalerMultilabel
-from steps.sklearn.models import LogisticRegressionMultilabel, CatboostClassifierMultilabel, XGBoostClassifierMultilabel
+from steps.preprocessing import (XYSplit, TextCleaner, TfidfVectorizer, WordListFilter, Normalizer,
+    TextCounter, MinMaxScaler, MinMaxScalerMultilabel)
+from steps.sklearn.models import (LogisticRegressionMultilabel, CatboostClassifierMultilabel,
+    XGBoostClassifierMultilabel)
 
 
 def tfidf_logreg(config):

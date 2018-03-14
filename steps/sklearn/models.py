@@ -77,7 +77,6 @@ class LinearSVC_proba(svm.LinearSVC):
         prob_positive = platt_predictions / platt_predictions.sum(axis=1)[:, None]
         prob_negative = 1.0 - prob_positive
         probs = np.hstack([prob_negative, prob_positive])
-        print(prob_positive)
         return probs
 
 

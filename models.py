@@ -272,8 +272,7 @@ def cudnn_lstm(embedding_matrix, embedding_size, trainable_embedding,
                       weights=[embedding_matrix],
                       trainable=trainable_embedding)(input_text)
     else:
-        x = Embedding(max_features,
-                      embedding_size)(input_text)
+        x = Embedding(max_features, embedding_size)(input_text)
 
     x = _dropout(dropout_embedding, dropout_mode)(x)
 
@@ -359,7 +358,8 @@ def vdcnn(embedding_size, maxlen, max_features,
 
     x = _dropout(dropout_embedding, dropout_mode)(x)
 
-    x = _convolutional_block(filter_nr, kernel_size, use_batch_norm, use_prelu, conv_dropout, dropout_mode,
+    x = _convolutional_block(filter_nr, kernel_size, use_batch_norm, use_prelu, conv_dropout,
+                             dropout_mode,
                              conv_kernel_reg_l2, conv_bias_reg_l2, batch_norm_first)(x)
 
     for i in range(repeat_block):
