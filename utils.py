@@ -43,13 +43,14 @@ def init_logger():
                                        datefmt='%Y-%m-%d %H:%M:%S')
 
     # console handler for validation info
-    ch_va = logging.StreamHandler()
-    ch_va.setLevel(logging.INFO)
+    ch_va1 = logging.StreamHandler()
+    ch_va2 = logging.FileHandler('toxic.log')
 
-    ch_va.setFormatter(fmt=message_format)
-
-    # add the handlers to the logger
-    logger.addHandler(ch_va)
+    for ch_va in (ch_va1, ch_va2):
+        ch_va.setLevel(logging.INFO)
+        ch_va.setFormatter(fmt=message_format)
+        # add the handlers to the logger
+        logger.addHandler(ch_va)
 
 
 def get_logger():
