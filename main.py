@@ -108,7 +108,7 @@ def _evaluate_pipeline(pipeline_name):
 
     score = multi_roc_auc_score(y_true, y_pred)
     logger.info('Score on validation is {}'.format(score))
-    ctx.channel_send('Final Validation Score ROC_AUC', 0, score)
+    # ctx.channel_send('Final Validation Score ROC_AUC', 0, score)
 
 
 @action.command()
@@ -360,7 +360,7 @@ def _fold_save_loop(valid_oof_submission, test_submission, i, pipeline_name):
 def _aggregate_fold_outputs(fold_scores, valid_predictions_out_of_fold, test_predictions_by_fold):
     mean_score = np.mean(fold_scores)
     logger.info('Score on validation is {}'.format(mean_score))
-    ctx.channel_send('Final Validation Score ROC_AUC', 0, mean_score)
+    # ctx.channel_send('Final Validation Score ROC_AUC', 0, mean_score)
 
     logger.info('Concatenating out of fold valid predictions')
     combined_oof_predictions = pd.concat(valid_predictions_out_of_fold, axis=0)
