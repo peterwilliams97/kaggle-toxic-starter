@@ -39,7 +39,7 @@ def read_yaml(filepath):
 def init_logger():
     logger = logging.getLogger('toxic')
     logger.setLevel(logging.INFO)
-    message_format = logging.Formatter(fmt='%(asctime)s %(filename)s:%(lineno)s >>> %(message)s',
+    message_format = logging.Formatter(fmt='%(asctime)s %(filename)s:%(lineno)s %(levelname)s: %(message)s',
                                        datefmt='%Y-%m-%d %H:%M:%S')
 
     # console handler for validation info
