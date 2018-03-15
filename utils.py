@@ -27,7 +27,13 @@ def read_params(ctx):
 def read_yaml(filepath):
     with open(filepath) as f:
         config = yaml.load(f)
-    return AttrDict(config)
+    attr_dict = AttrDict(config)
+    d = attr_dict.parameters
+    for k in d.keys():
+        if isinstance(d[k], str) and d[k].startswith('~/data'):
+            d[k] = os.path.expanduser(d[k])
+    attr_dict.parameters = d
+    return attr_dict
 
 
 def init_logger():
@@ -75,14 +81,14 @@ def read_predictions(prediction_dir, concat_mode='concat'):
     for filepath in filepaths_train:
         train_dfs.append(pd.read_csv(filepath))
     train_dfs = reduce(lambda df1, df2: pd.merge(df1, df2, on=['id', 'fold_id']), train_dfs)
-    train_dfs.columns = _clean_columns(train_dfs, keep_colnames = ['id', 'fold_id'])
+    train_dfs.columns = _clean_columns(train_dfs, keep_colnames=['id', 'fold_id'])
     train_dfs = pd.merge(train_dfs, labels, on=['id'])
 
     test_dfs = []
     for filepath in filepaths_test:
         test_dfs.append(pd.read_csv(filepath))
     test_dfs = reduce(lambda df1, df2: pd.merge(df1, df2, on=['id', 'fold_id']), test_dfs)
-    test_dfs.columns = _clean_columns(test_dfs, keep_colnames = ['id', 'fold_id'])
+    test_dfs.columns = _clean_columns(test_dfs, keep_colnames=['id', 'fold_id'])
 
     return train_dfs, test_dfs
 
