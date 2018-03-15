@@ -84,7 +84,7 @@ def read_predictions(prediction_dir, concat_mode='concat'):
 
 def _clean_columns(df, keep_colnames):
     new_colnames = []
-    for i,colname in enumerate(df.columns):
+    for i, colname in enumerate(df.columns):
         if colname not in keep_colnames:
             new_colnames.append(i)
         else:
@@ -102,7 +102,10 @@ def create_predictions_df(meta, predictions, columns):
 
 
 def save_submission(submission, experiments_dir, filename, logger):
+    logger.info('save_submission: experiments_dir={} filename={}'.format(experiments_dir, filename))
     logger.info('submission head \n\n {}'.format(submission.head()))
+
+    os.makedirs(experiments_dir, exist_ok=True)
 
     submission_filepath = os.path.join(experiments_dir, filename)
     submission.to_csv(submission_filepath, index=None)

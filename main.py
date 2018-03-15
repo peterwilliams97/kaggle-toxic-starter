@@ -289,6 +289,7 @@ def prepare_single_model_predictions_dir(pipeline_names):
     os.makedirs(params.single_model_predictions_dir, exist_ok=True)
 
     train_labels_source = os.path.join(params.data_dir, train_translated_csv)
+    os.makedirs(params.single_model_predictions_dir, exist_ok=True)
     train_labels_destination = os.path.join(params.single_model_predictions_dir, 'labels.csv')
     logger.info('copying train from {} to {}'.format(train_labels_source, train_labels_destination))
 
