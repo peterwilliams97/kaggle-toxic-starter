@@ -12,7 +12,12 @@ from sklearn.metrics import roc_auc_score, log_loss
 
 def read_params(ctx):
     if ctx is None or ctx.params.__class__.__name__ == 'OfflineContextParams':
-        neptune_config = read_yaml('neptune.yaml')
+        if 'TOXIC_PARAMS' in os.environ:
+            params_path = os.environ['TOXIC_PARAMS']
+            print('&&&&&&', params_path)
+            neptune_config = read_yaml(params_path)
+        else:
+            neptune_config = read_yaml('neptune.yaml')
         params = neptune_config.parameters
     else:
         params = ctx.params
@@ -28,8 +33,8 @@ def read_yaml(filepath):
 def init_logger():
     logger = logging.getLogger('toxic')
     logger.setLevel(logging.INFO)
-    message_format = logging.Formatter(fmt='%(asctime)s %(name)s >>> %(message)s',
-                                       datefmt='%Y-%m-%d %H-%M-%S')
+    message_format = logging.Formatter(fmt='%(asctime)s %(pathname)s:%(lineno)s >>> %(message)s',
+                                       datefmt='%Y-%m-%d %H:%M:%S')
 
     # console handler for validation info
     ch_va = logging.StreamHandler()

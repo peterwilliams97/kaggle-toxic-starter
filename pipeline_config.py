@@ -1,14 +1,21 @@
 import os
 
 from attrdict import AttrDict
-# from deepsense import neptune
+from offline import PURE_OFFLINE, WAITING_FOR_TRANSLATION
+if not PURE_OFFLINE:
+    from deepsense import neptune
 
 from utils import read_params, multi_roc_auc_score
-# ctx = neptune.Context()
-ctx = None
+
+ctx = None if PURE_OFFLINE else neptune.Context()
 params = read_params(ctx)
 
-X_COLUMNS = ['comment_text_english']
+if WAITING_FOR_TRANSLATION:
+    comment_text_english = 'comment_text'
+else:
+    comment_text_english = 'comment_text_english'
+
+X_COLUMNS = [comment_text_english]
 Y_COLUMNS = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 CV_LABELS = ['toxic']
 ID_LABEL = ['id']

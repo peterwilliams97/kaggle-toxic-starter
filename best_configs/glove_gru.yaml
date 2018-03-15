@@ -21,17 +21,17 @@ exclude:
   - .ipynb_checkpoints
 
 parameters:
-# Cloud Environment
-  data_dir:                     /public/toxic_comments
-  embedding_filepath:           /public/models/glove/glove.840B.300d.txt
-  single_model_predictions_dir: /public/toxic_comments/single_model_predictions_03092018
-  experiment_dir:               /output/trained_pipelines/glove_gru
+# # Cloud Environment
+#   data_dir:                     /public/toxic_comments
+#   embedding_filepath:           /public/models/glove/glove.840B.300d.txt
+#   single_model_predictions_dir: /public/toxic_comments/single_model_predictions_03092018
+#   experiment_dir:               /output/trained_pipelines/glove_gru
 
 # Local Environment
-#  data_dir:                     /path/to/toxic/data
-#  embedding_filepath:           /path/to/embedding i.e. ~/glove/glove.840B.300d.txt
-#  single_model_predictions_dir: /path/to/single/model/preds/ i.e. ~/single_model_predictions_03092018
-#  experiment_dir:               /my/working/directory i.e. ~/toxic/trained_pipelines/glove_gru
+  data_dir:                     ~/data/toxic/
+  embedding_filepath:           ~/data/glove.840B/glove.840B.300d.txt
+  single_model_predictions_dir: ~/data/toxic_nep/predictions/single_model_predictions_000
+  experiment_dir:               ~/data/toxic_nep/trained_pipelines/glove_gru
 
   bad_words_filepath: None
   overwrite: 1

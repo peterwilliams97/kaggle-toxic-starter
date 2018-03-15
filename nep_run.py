@@ -4,7 +4,7 @@ import subprocess
 import click
 import numpy as np
 import pandas as pd
-from offline import , WAITING_FOR_TRANSLATION
+from offline import PURE_OFFLINE
 if not PURE_OFFLINE:
     from deepsense import neptune
 from sklearn.model_selection import StratifiedKFold
@@ -18,16 +18,10 @@ from utils import (init_logger, get_logger, read_params, read_data, read_predict
 
 RANDOM_STATE = 1234
 
-if WAITING_FOR_TRANSLATION:
-    train_translated_csv = 'train.csv'
-    test_translated_csv = 'test.csv'
-else:
-    train_translated_csv = 'train_translated.csv'
-    test_translated_csv = 'test_translated.csv'
-
 logger = get_logger()
 ctx = None if PURE_OFFLINE else neptune.Context()
 params = read_params(ctx)
+
 
 @click.group()
 def action():
@@ -36,18 +30,18 @@ def action():
 
 @action.command()
 def translate_to_english():
-    logger.info('translating test')
-    translate_data(data_dir=params.data_dir, filename='test.csv',
-                   filename_translated=test_translated_csv)
     logger.info('translating train')
     translate_data(data_dir=params.data_dir, filename='train.csv',
                    filename_translated='train_translated.csv')
+    logger.info('translating test')
+    translate_data(data_dir=params.data_dir, filename='test.csv',
+                   filename_translated='test_translated.csv')
 
 
 @action.command()
 def train_valid_split():
     logger.info('preprocessing training data')
-    split_train_data(data_dir=params.data_dir, filename=train_translated_csv,
+    split_train_data(data_dir=params.data_dir, filename='train.csv',
                      target_columns=CV_LABELS,
                      n_splits=params.n_cv_splits)
 
@@ -118,7 +112,7 @@ def predict_pipeline(pipeline_name):
 
 
 def _predict_pipeline(pipeline_name):
-    test = read_data(data_dir=params.data_dir, filename=test_translated_csv)
+    test = read_data(data_dir=params.data_dir, filename='test_translated.csv')
     data = {'input': {'meta': test,
                       'meta_valid': None,
                       'train_mode': False,
@@ -170,8 +164,8 @@ def train_evaluate_predict_cv_pipeline(pipeline_name, model_level):
         shutil.rmtree(params.experiment_dir)
 
     if model_level == 'first':
-        train = read_data(data_dir=params.data_dir, filename=train_translated_csv)
-        test = read_data(data_dir=params.data_dir, filename=test_translated_csv)
+        train = read_data(data_dir=params.data_dir, filename='train.csv')
+        test = read_data(data_dir=params.data_dir, filename='test.csv')
     elif model_level == 'second':
         train, test = read_predictions(prediction_dir=params.single_model_predictions_dir)
     else:
@@ -288,7 +282,7 @@ def train_evaluate_predict_cv_pipeline(pipeline_name, model_level):
 def prepare_single_model_predictions_dir(pipeline_names):
     os.makedirs(params.single_model_predictions_dir, exist_ok=True)
 
-    train_labels_source = os.path.join(params.data_dir, train_translated_csv)
+    train_labels_source = os.path.join(params.data_dir, 'train_translated.csv')
     train_labels_destination = os.path.join(params.single_model_predictions_dir, 'labels.csv')
     logger.info('copying train from {} to {}'.format(train_labels_source, train_labels_destination))
 
@@ -314,11 +308,12 @@ def prepare_single_model_predictions_dir(pipeline_names):
             shutil.copy(source_filepath, destination_filepath)
 
 
-def _fold_fit_loop(data_train, data_valid, data_test, y_valid,
-                   valid_split, test_split,
-                   i, pipeline_name):
-    logger.info('Training...')
+def _fold_fit_loop(data_train, data_valid, data_test, y_valid, valid_split, test_split, i,
+                   pipeline_name):
+    logger.info('Training...%s' % [type(v) for v in [data_train, data_valid, data_test, y_valid,
+                                                 valid_split, test_split, i, pipeline_name]])
     pipeline = PIPELINES[pipeline_name]['train'](SOLUTION_CONFIG)
+    logger.info('pipeline=%s' % pipeline)
     _ = pipeline.fit_transform(data_train)
 
     logger.info('Evaluating...')

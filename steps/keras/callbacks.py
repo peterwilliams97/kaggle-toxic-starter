@@ -1,13 +1,13 @@
 import re
 
-from deepsense import neptune
+# from deepsense import neptune
 from keras import backend as K
 from keras.callbacks import Callback
 
 
 class NeptuneMonitor(Callback):
     def __init__(self, **kwargs):
-        self.ctx = neptune.Context()
+        # self.ctx = neptune.Context()
         self.batch_loss_channel_name = get_correct_channel_name(self.ctx, 'Batch Log-loss training')
         self.epoch_loss_channel_name = get_correct_channel_name(self.ctx, 'Log-loss training')
         self.epoch_val_loss_channel_name = get_correct_channel_name(self.ctx, 'Log-loss validation')
@@ -17,12 +17,12 @@ class NeptuneMonitor(Callback):
 
     def on_batch_end(self, batch, logs={}):
         self.batch_id += 1
-        self.ctx.channel_send(self.batch_loss_channel_name, self.batch_id, logs['loss'])
+        # self.ctx.channel_send(self.batch_loss_channel_name, self.batch_id, logs['loss'])
 
     def on_epoch_end(self, epoch, logs={}):
         self.epoch_id += 1
-        self.ctx.channel_send(self.epoch_loss_channel_name, self.epoch_id, logs['loss'])
-        self.ctx.channel_send(self.epoch_val_loss_channel_name, self.epoch_id, logs['loss'])
+        # self.ctx.channel_send(self.epoch_loss_channel_name, self.epoch_id, logs['loss'])
+        # self.ctx.channel_send(self.epoch_val_loss_channel_name, self.epoch_id, logs['loss'])
 
 
 class ReduceLR(Callback):

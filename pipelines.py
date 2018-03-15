@@ -10,6 +10,11 @@ from steps.preprocessing import (XYSplit, TextCleaner, TfidfVectorizer, WordList
 from steps.sklearn.models import (LogisticRegressionMultilabel, CatboostClassifierMultilabel,
     XGBoostClassifierMultilabel)
 
+from utils import get_logger
+
+
+logger = get_logger()
+
 
 def tfidf_logreg(config):
     preprocessed_input = _preprocessing(config, is_train=False)
@@ -745,6 +750,9 @@ def rnn_ensemble(config, is_train):
 
 
 def _preprocessing(config, is_train=True):
+    logger.info('_preprocessing: is_train=%s config=%d' % (is_train, len(config)))
+    logger.info('\n\txy_splitter=%s \n\ttext_cleaner=%s' % (config.xy_splitter, config.text_cleaner))
+
     if is_train:
         xy_train = Step(name='xy_train',
                         transformer=XYSplit(**config.xy_splitter),
@@ -901,6 +909,8 @@ def _tfidf(preprocessed_input, config):
 
 
 def _bad_word_tfidf(preprocessed_input, config):
+    logger.info('_bad_word_tfidf: cache_dirpath=%s\n\tbad_word_filter=%s' % (
+        config.env.cache_dirpath, config.bad_word_filter))
     bad_word_filter = Step(name='bad_word_filter',
                            transformer=WordListFilter(**config.bad_word_filter),
                            input_steps=[preprocessed_input],
