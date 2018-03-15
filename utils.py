@@ -52,7 +52,12 @@ def get_logger():
 
 def read_data(data_dir, filename):
     meta_filepath = os.path.join(data_dir, filename)
-    meta_data = pd.read_csv(meta_filepath)
+    try:
+        meta_data = pd.read_csv(meta_filepath)
+    except:
+        logging.info('***read_data: data_dir=%s filename=%s meta_filepath=%s' % (data_dir,
+            filename, meta_filepath))
+        raise
     return meta_data
 
 
@@ -70,14 +75,14 @@ def read_predictions(prediction_dir, concat_mode='concat'):
     for filepath in filepaths_train:
         train_dfs.append(pd.read_csv(filepath))
     train_dfs = reduce(lambda df1, df2: pd.merge(df1, df2, on=['id', 'fold_id']), train_dfs)
-    train_dfs.columns = _clean_columns(train_dfs, keep_colnames = ['id','fold_id'])
+    train_dfs.columns = _clean_columns(train_dfs, keep_colnames = ['id', 'fold_id'])
     train_dfs = pd.merge(train_dfs, labels, on=['id'])
 
     test_dfs = []
     for filepath in filepaths_test:
         test_dfs.append(pd.read_csv(filepath))
     test_dfs = reduce(lambda df1, df2: pd.merge(df1, df2, on=['id', 'fold_id']), test_dfs)
-    test_dfs.columns = _clean_columns(test_dfs, keep_colnames = ['id','fold_id'])
+    test_dfs.columns = _clean_columns(test_dfs, keep_colnames = ['id', 'fold_id'])
 
     return train_dfs, test_dfs
 
