@@ -4,7 +4,7 @@ import subprocess
 import click
 import numpy as np
 import pandas as pd
-from offline import , WAITING_FOR_TRANSLATION
+from offline import PURE_OFFLINE, WAITING_FOR_TRANSLATION
 if not PURE_OFFLINE:
     from deepsense import neptune
 from sklearn.model_selection import StratifiedKFold
