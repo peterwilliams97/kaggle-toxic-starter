@@ -21,17 +21,17 @@ exclude:
   - .ipynb_checkpoints
 
 parameters:
-# Cloud Environment
-  data_dir:                     /public/toxic_comments
-  embedding_filepath:           /public/models/word2vec/GoogleNews-vectors-negative300.bin
-  single_model_predictions_dir: /public/toxic_comments/single_model_predictions_03092018
-  experiment_dir:               /output/trained_pipelines/word2vec_scnn
+# # Cloud Environment
+#   data_dir:                     /public/toxic_comments
+#   embedding_filepath:           /public/models/word2vec/GoogleNews-vectors-negative300.bin
+#   single_model_predictions_dir: /public/toxic_comments/single_model_predictions_03092018
+#   experiment_dir:               /output/trained_pipelines/word2vec_scnn
 
-# # Local Environment
-#   data_dir:                     ~/data/toxic/
-#   embedding_filepath:           ~/data/models/word2vec/GoogleNews-vectors-negative300.bin
-#   single_model_predictions_dir: ~/data/toxic_nep/predictions/single_model_predictions_000
-#   experiment_dir:               ~/data/toxic_nep/trained_pipelines/word2vec_scnn
+# Local Environment
+  data_dir:                     ~/data/toxic/
+  embedding_filepath:           ~/data/models/word2vec/GoogleNews-vectors-negative300.bin
+  single_model_predictions_dir: ~/data/toxic_nep/predictions/single_model_predictions_000
+  experiment_dir:               ~/data/toxic_nep/trained_pipelines/word2vec_scnn
 
   bad_words_filepath: None
   overwrite: 1
