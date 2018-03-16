@@ -1,6 +1,8 @@
 import glob
 import logging
 import os
+import sys
+import traceback
 from functools import reduce
 
 import numpy as np
@@ -14,7 +16,6 @@ def read_params(ctx):
     if ctx is None or ctx.params.__class__.__name__ == 'OfflineContextParams':
         if 'TOXIC_PARAMS' in os.environ:
             params_path = os.environ['TOXIC_PARAMS']
-            print('&&&&&&', params_path)
             neptune_config = read_yaml(params_path)
         else:
             neptune_config = read_yaml('neptune.yaml')
@@ -52,6 +53,19 @@ def init_logger():
         # add the handlers to the logger
         logger.addHandler(ch_va)
 
+    # Install exception handler
+    sys.excepthook = exception_handler
+
+    logger.info('*' * 80)
+    logger.info('Starting logger: TOXIC_PARAMS=%s argv=%s' % (os.environ.get('TOXIC_PARAMS'),
+        sys.argv))
+
+
+def exception_handler(typ, value, tb):
+    logger = get_logger()
+    stack = ''.join(traceback.format_exception(typ, value, tb))
+    logger.exception("%s\nUncaught exception:\n%s" % ('@' * 80, stack))
+
 
 def get_logger():
     return logging.getLogger('toxic')
@@ -62,7 +76,7 @@ def read_data(data_dir, filename):
     try:
         meta_data = pd.read_csv(meta_filepath)
     except:
-        logging.info('***read_data: data_dir=%s filename=%s meta_filepath=%s' % (data_dir,
+        logging.exception('***read_data: data_dir=%s filename=%s meta_filepath=%s' % (data_dir,
             filename, meta_filepath))
         raise
     return meta_data
