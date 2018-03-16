@@ -278,7 +278,9 @@ def cudnn_lstm(embedding_matrix, embedding_size, trainable_embedding,
                dense_kernel_reg_l2, dense_bias_reg_l2,
                use_prelu, use_batch_norm, batch_norm_first):
     input_text = Input(shape=(maxlen,))
+    logger.info('cudnn_lstm: maxlen=%d' % maxlen)
     if embedding_matrix is not None:
+        logger.info('embedding_matrix=%s' % list(embedding_matrix.shape))
         x = Embedding(embedding_matrix.shape[0],
                       embedding_matrix.shape[1],
                       weights=[embedding_matrix],
