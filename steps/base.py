@@ -92,7 +92,8 @@ class Step:
         else:
             logger.info('step {} fitting and transforming...'.format(self.name))
             step_output_data = self.transformer.fit_transform(**step_inputs)
-            logger.info('step {} saving transformer...'.format(self.name))
+            logger.info('step {0} saving transformer...{1}'.format(self.name,
+                self.cache_filepath_step_transformer))
             self.transformer.save(self.cache_filepath_step_transformer)
             if self.cache_output:
                 logger.info('step {} saving outputs...'.format(self.name))

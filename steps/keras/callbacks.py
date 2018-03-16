@@ -1,4 +1,4 @@
-import re
+# import re
 
 # from deepsense import neptune
 from keras import backend as K
@@ -34,13 +34,13 @@ class ReduceLR(Callback):
             K.set_value(self.model.optimizer.lr, self.gamma * K.get_value(self.model.optimizer.lr))
 
 
-def get_correct_channel_name(ctx, name):
-    channels_with_name = [channel for channel in ctx.job._channels if name in channel.name]
-    if len(channels_with_name) == 0:
-        return name
-    else:
-        channel_ids = [re.split('[^\d]', channel.name)[-1] for channel in channels_with_name]
-        channel_ids = sorted([int(idx) if idx != '' else 0 for idx in channel_ids])
-        last_id = channel_ids[-1]
-        corrected_name = '{} {}'.format(name, last_id + 1)
-        return corrected_name
+# def get_correct_channel_name(ctx, name):
+#     channels_with_name = [channel for channel in ctx.job._channels if name in channel.name]
+#     if len(channels_with_name) == 0:
+#         return name
+#     else:
+#         channel_ids = [re.split('[^\d]', channel.name)[-1] for channel in channels_with_name]
+#         channel_ids = sorted([int(idx) if idx != '' else 0 for idx in channel_ids])
+#         last_id = channel_ids[-1]
+#         corrected_name = '{} {}'.format(name, last_id + 1)
+#         return corrected_name

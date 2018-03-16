@@ -8,7 +8,7 @@ from keras.layers.merge import add, concatenate
 from keras.models import Model
 from keras.optimizers import Adam
 
-from steps.keras.callbacks import NeptuneMonitor, ReduceLR
+from steps.keras.callbacks import ReduceLR
 from steps.keras.contrib import AttentionWeightedAverage
 from steps.keras.models import ClassifierXY
 from steps.utils import create_filepath
@@ -27,13 +27,15 @@ class BasicClassifier(ClassifierXY):
         return 'binary_crossentropy'
 
     def _create_callbacks(self, **kwargs):
+        params = [(k, kwargs[k]) for k in ('lr_scheduler', 'early_stopping', 'model_checkpoint')]
+        logger.info('_create_callbacks: %s' % params)
         lr_scheduler = ReduceLR(**kwargs['lr_scheduler'])
         early_stopping = EarlyStopping(**kwargs['early_stopping'])
         checkpoint_filepath = kwargs['model_checkpoint']['filepath']
         create_filepath(checkpoint_filepath)
         model_checkpoint = ModelCheckpoint(**kwargs['model_checkpoint'])
-        neptune = NeptuneMonitor(**kwargs['neptune_monitor'])
-        return [neptune, lr_scheduler, early_stopping, model_checkpoint]
+        # neptune = NeptuneMonitor(**kwargs['neptune_monitor'])
+        return [lr_scheduler, early_stopping, model_checkpoint]
 
 
 class CharVDCNN(BasicClassifier):
