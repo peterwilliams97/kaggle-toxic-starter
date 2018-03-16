@@ -211,7 +211,7 @@ class FastTextEmbeddingsMatrix(EmbeddingsMatrix):
         nb_words = min(self.max_features, len(word_index))
         embedding_matrix = np.random.normal(emb_mean, emb_std, (nb_words, self.embedding_size))
         for word, i in word_index.items():
-            if i >= self.max_features:
+            if i >= nb_words:
                 continue
             embedding_vector = embeddings_index.get(word)
             if embedding_vector is not None:
