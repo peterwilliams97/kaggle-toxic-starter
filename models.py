@@ -194,8 +194,10 @@ def scnn(embedding_matrix, embedding_size, trainable_embedding, maxlen, max_feat
          dense_kernel_reg_l2, dense_bias_reg_l2,
          use_prelu, use_batch_norm, batch_norm_first):
     input_text = Input(shape=(maxlen,))
-    x = Embedding(max_features, embedding_size, weights=[embedding_matrix], trainable=trainable_embedding)(
-        input_text)
+    x = Embedding(embedding_matrix.shape[0],
+                  embedding_matrix.shape[1],
+                  weights=[embedding_matrix],
+                  trainable=trainable_embedding)(input_text)
 
     x = _dropout(dropout_embedding, dropout_mode)(x)
 
@@ -231,8 +233,10 @@ def dpcnn(embedding_matrix, embedding_size, trainable_embedding, maxlen, max_fea
 
     input_text = Input(shape=(maxlen,))
     if embedding_matrix is not None:
-        embedding = Embedding(max_features, embedding_size,
-                              weights=[embedding_matrix], trainable=trainable_embedding)(input_text)
+        embedding = Embedding(embedding_matrix.shape[0],
+                              embedding_matrix.shape[1],
+                              weights=[embedding_matrix],
+                              trainable=trainable_embedding)(input_text)
     else:
         embedding = Embedding(max_features, embedding_size)(input_text)
 
@@ -275,8 +279,8 @@ def cudnn_lstm(embedding_matrix, embedding_size, trainable_embedding,
                use_prelu, use_batch_norm, batch_norm_first):
     input_text = Input(shape=(maxlen,))
     if embedding_matrix is not None:
-        x = Embedding(max_features,
-                      embedding_size,
+        x = Embedding(embedding_matrix.shape[0],
+                      embedding_matrix.shape[1],
                       weights=[embedding_matrix],
                       trainable=trainable_embedding)(input_text)
     else:
@@ -321,8 +325,7 @@ def cudnn_gru(embedding_matrix, embedding_size, trainable_embedding,
                       weights=[embedding_matrix],
                       trainable=trainable_embedding)(input_text)
     else:
-        x = Embedding(max_features,
-                      embedding_size)(input_text)
+        x = Embedding(max_features, embedding_size)(input_text)
 
     x = _dropout(dropout_embedding, dropout_mode)(x)
 

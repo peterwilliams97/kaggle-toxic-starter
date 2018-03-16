@@ -88,7 +88,7 @@ class ClassifierXY(BasicClassifier):
 
 class ClassifierGenerator(BasicClassifier):
     def fit(self, datagen, validation_datagen):
-        logger.info('!!!fit %s %s %s' % (self.__class__.__name__, list(X.shape), list(y.shape)))
+        logger.info('!!!fit %s' % self.__class__.__name__)
         self.callbacks = self._create_callbacks(**self.callbacks_config)
         self.model = self._compile_model(**self.architecture_config)
 
