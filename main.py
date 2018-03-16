@@ -318,7 +318,7 @@ def prepare_single_model_predictions_dir(pipeline_names):
 def _fold_fit_loop(data_train, data_valid, data_test, y_valid,
                    valid_split, test_split,
                    i, pipeline_name):
-    logger.info('Training...')
+    logger.info('Training...pipeline_name=%s' % pipeline_name)
     pipeline = PIPELINES[pipeline_name]['train'](SOLUTION_CONFIG)
     _ = pipeline.fit_transform(data_train)
 

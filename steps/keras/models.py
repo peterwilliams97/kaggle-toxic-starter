@@ -4,9 +4,21 @@ import numpy as np
 from keras.models import load_model
 from sklearn.externals import joblib
 from gensim.models import KeyedVectors
-
 from steps.base import BaseTransformer
 from .contrib import AttentionWeightedAverage
+
+import sys
+import os
+parentdir = os.path.dirname(__file__)
+parentdir = os.path.join(parentdir, '../..')
+parentdir = os.path.abspath(parentdir)
+sys.path.append(parentdir)
+
+from utils import get_logger
+from offline import MAX_EMBEDDING
+
+
+logger = get_logger()
 
 
 class BasicClassifier(BaseTransformer):
@@ -58,6 +70,7 @@ class BasicClassifier(BaseTransformer):
 
 class ClassifierXY(BasicClassifier):
     def fit(self, X, y, validation_data):
+        logger.info('!!!fit %s %s %s' % (self.__class__.__name__, list(X.shape), list(y.shape)))
         self.callbacks = self._create_callbacks(**self.callbacks_config)
         self.model = self._compile_model(**self.architecture_config)
 
@@ -75,6 +88,7 @@ class ClassifierXY(BasicClassifier):
 
 class ClassifierGenerator(BasicClassifier):
     def fit(self, datagen, validation_datagen):
+        logger.info('!!!fit %s %s %s' % (self.__class__.__name__, list(X.shape), list(y.shape)))
         self.callbacks = self._create_callbacks(**self.callbacks_config)
         self.model = self._compile_model(**self.architecture_config)
 
@@ -102,6 +116,7 @@ class EmbeddingsMatrix(BaseTransformer):
         self.embedding_size = embedding_size
 
     def fit(self, tokenizer):
+        logger.info('!!!fit %s' % self.__class__.__name__)
         self.embedding_matrix = self._get_embedding_matrix(tokenizer)
         return self
 
@@ -121,23 +136,32 @@ class EmbeddingsMatrix(BaseTransformer):
 
 class GloveEmbeddingsMatrix(EmbeddingsMatrix):
     def _get_embedding_matrix(self, tokenizer):
+        logger.info('GloveEmbeddingsMatrix: pretrained_filepath=%s' % self.pretrained_filepath)
+
         embeddings_index = dict()
         with open(self.pretrained_filepath) as f:
-            for line in f:
+            for i, line in enumerate(f):
                 # Note: use split(' ') instead of split() if you get an error.
                 values = line.split(' ')
                 word = values[0]
                 coefs = np.asarray(values[1:], dtype='float32')
                 embeddings_index[word] = coefs
+                if MAX_EMBEDDING is not None:
+                    if i >= MAX_EMBEDDING:
+                        break
 
         all_embs = np.stack(embeddings_index.values())
         emb_mean, emb_std = all_embs.mean(), all_embs.std()
+        logger.info('all_embs=%s: emb_mean emb_std=%s' % (list(all_embs.shape), [emb_mean, emb_std]))
 
         word_index = tokenizer.word_index
         nb_words = min(self.max_features, len(word_index))
         embedding_matrix = np.random.normal(emb_mean, emb_std, (nb_words, self.embedding_size))
+        logger.info('embedding_matrix=%s: word_index=%d' % (list(embedding_matrix.shape),
+            len(word_index)))
+
         for word, i in word_index.items():
-            if i >= self.max_features:
+            if i >= nb_words:
                 continue
             embedding_vector = embeddings_index.get(word)
             if embedding_vector is not None:

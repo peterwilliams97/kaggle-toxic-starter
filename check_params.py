@@ -1,15 +1,16 @@
 from glob import glob
-import logging
 import os
-import sys
-import traceback
-from functools import reduce
-
-import numpy as np
-import pandas as pd
 import yaml
 from attrdict import AttrDict
-from sklearn.metrics import roc_auc_score, log_loss
+import tensorflow as tf
+
+
+print('tf=%s' % tf.__version__)
+# # assert False
+# from steps.keras.models import blah
+
+# blah()
+# assert False
 
 
 def check_all_yamls():
@@ -29,7 +30,6 @@ def check_all_yamls():
     print('%d missing paths' % len(missing))
     for i, path in enumerate(sorted(missing)):
          print('%3d: %-40s' % (i, path))
-
 
 
 def read_params(filepath):

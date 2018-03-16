@@ -7,7 +7,7 @@ from catboost import CatBoostClassifier
 from xgboost import XGBClassifier
 
 from steps.base import BaseTransformer
-from steps.utils import get_logger
+from utils import get_logger
 
 logger = get_logger()
 

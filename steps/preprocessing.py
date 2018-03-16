@@ -96,7 +96,7 @@ class TextCleaner(BaseTransformer):
 
     def _use_stopwords(self, x):
         words = tokenizer.tokenize(x)
-        words = [w for w in words if not w in eng_stopwords]
+        words = [w for w in words if w not in eng_stopwords]
         x = " ".join(words)
         return x
 
@@ -104,7 +104,7 @@ class TextCleaner(BaseTransformer):
         words = tokenizer.tokenize(x)
         words = [APPO[word] if word in APPO else word for word in words]
         words = [lem.lemmatize(word, "v") for word in words]
-        words = [w for w in words if not w in eng_stopwords]
+        words = [w for w in words if w not in eng_stopwords]
         x = " ".join(words)
         return x
 

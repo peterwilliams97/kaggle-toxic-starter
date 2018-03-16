@@ -13,6 +13,11 @@ from steps.keras.contrib import AttentionWeightedAverage
 from steps.keras.models import ClassifierXY
 from steps.utils import create_filepath
 
+from utils import get_logger
+
+
+logger = get_logger()
+
 
 class BasicClassifier(ClassifierXY):
     def _build_optimizer(self, **kwargs):
@@ -50,6 +55,7 @@ class CharVDCNN(BasicClassifier):
 
 class PretrainedEmbeddingModel(BasicClassifier):
     def fit(self, embedding_matrix, X, y, validation_data):
+        logger.info('!!!fit %s %s %s' % (self.__class__.__name__, list(X.shape), list(y.shape)))
         X_valid, y_valid = validation_data
         self.callbacks = self._create_callbacks(**self.callbacks_config)
         self.architecture_config['model_params']['embedding_matrix'] = embedding_matrix
@@ -308,8 +314,8 @@ def cudnn_gru(embedding_matrix, embedding_size, trainable_embedding,
               use_prelu, use_batch_norm, batch_norm_first):
     input_text = Input(shape=(maxlen,))
     if embedding_matrix is not None:
-        x = Embedding(max_features,
-                      embedding_size,
+        x = Embedding(embedding_matrix.shape[0],
+                      embedding_matrix.shape[1],
                       weights=[embedding_matrix],
                       trainable=trainable_embedding)(input_text)
     else:

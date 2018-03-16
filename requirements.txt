@@ -1,7 +1,7 @@
-numpy==1.14.0
-pydot_ng==1.0.0
-scipy==1.0.0
-click==6.7
+numpy>=1.14.0
+pydot_ng>=1.0.0
+scipy>=1.0.0
+click>=6.7
 attrdict==2.0.0
 pandas==0.21.0
 neptune_cli==2.7.1

@@ -12,7 +12,8 @@ logger = get_logger()
 
 
 class Step:
-    def __init__(self, name, transformer, input_steps=[], input_data=[], adapter=None, cache_dirpath=None,
+    def __init__(self, name, transformer, input_steps=[], input_data=[], adapter=None,
+                 cache_dirpath=None,
                  cache_output=False, overwrite_transformer=False, save_graph=False):
         self.name = name
         self.transformer = transformer
@@ -58,6 +59,7 @@ class Step:
         return os.path.exists(self.save_filepath_step_output)
 
     def fit_transform(self, data):
+        logger.info('##2 fit_transform %s' % self.__class__.__name__)
         if self.output_is_cached and self.cache_output and not self.overwrite_transformer:
             logger.info('step {} loading output...'.format(self.name))
             step_output_data = self._load_output()
@@ -68,6 +70,7 @@ class Step:
                     step_inputs[input_data_part] = data[input_data_part]
 
             for input_step in self.input_steps:
+                logger.info('@@@ %s' % input_step.name)
                 step_inputs[input_step.name] = input_step.fit_transform(data)
 
             if self.adapter:
@@ -210,6 +213,7 @@ class BaseTransformer:
         return NotImplementedError
 
     def fit_transform(self, *args, **kwargs):
+        logger.info('##3 fit_transform %s' % self.__class__.__name__)
         self.fit(*args, **kwargs)
         return self.transform(*args, **kwargs)
 
@@ -228,6 +232,7 @@ class MockTransformer(BaseTransformer):
         return
 
     def fit_transform(self, *args, **kwargs):
+        logger.info('##1 fit_transform %s' % self.__class__.__name__)
         self.fit(*args, **kwargs)
         return self.transform(*args, **kwargs)
 

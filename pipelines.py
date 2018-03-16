@@ -167,6 +167,7 @@ def char_vdcnn(config, is_train):
 
 
 def glove_gru(config, is_train):
+    logger.info('***glove_gru')
     preprocessed_input = _preprocessing(config, is_train)
     word_tokenizer = _word_tokenizer(preprocessed_input, config, is_train)
     glove_embeddings = _glove_embeddings(word_tokenizer, config)

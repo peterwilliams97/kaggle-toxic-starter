@@ -10,6 +10,7 @@ import pandas as pd
 import yaml
 from attrdict import AttrDict
 from sklearn.metrics import roc_auc_score, log_loss
+from offline import RAISE_EXCEPTIONS, MAX_DATA
 
 
 def read_params(ctx):
@@ -53,8 +54,9 @@ def init_logger():
         # add the handlers to the logger
         logger.addHandler(ch_va)
 
-    # Install exception handler
-    sys.excepthook = exception_handler
+    if not RAISE_EXCEPTIONS:
+        # Install exception handler
+        sys.excepthook = exception_handler
 
     logger.info('*' * 80)
     logger.info('Starting logger: TOXIC_PARAMS=%s argv=%s' % (os.environ.get('TOXIC_PARAMS'),
@@ -79,6 +81,8 @@ def read_data(data_dir, filename):
         logging.exception('***read_data: data_dir=%s filename=%s meta_filepath=%s' % (data_dir,
             filename, meta_filepath))
         raise
+    if MAX_DATA is not None:
+        meta_data = meta_data.iloc[:MAX_DATA, :]
     return meta_data
 
 
