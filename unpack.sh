@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pushd ~/data/models
+pushd ~/data/
 
 mkdir models
 cd models
