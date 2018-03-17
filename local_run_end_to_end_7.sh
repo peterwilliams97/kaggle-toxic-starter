@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# neptune run \
+# --config best_configs/glove_lstm.yaml \
+# -- train_evaluate_predict_cv_pipeline -p glove_lstm -m first
+export TOXIC_PARAMS=best_configs/glove_lstm.yaml
+python main.py train_evaluate_predict_cv_pipeline -p glove_lstm -m first
+
 
 # neptune run \
 # --config best_configs/fasttext_dpcnn.yaml \
@@ -82,12 +88,6 @@ python main.py train_evaluate_predict_cv_pipeline -p fasttext_lstm -m first
 # -- train_evaluate_predict_cv_pipeline -p glove_gru -m first
 export TOXIC_PARAMS=best_configs/glove_gru.yaml
 python main.py train_evaluate_predict_cv_pipeline -p glove_gru -m first
-
-# neptune run \
-# --config best_configs/glove_lstm.yaml \
-# -- train_evaluate_predict_cv_pipeline -p glove_lstm -m first
-export TOXIC_PARAMS=best_configs/glove_lstm.yaml
-python main.py train_evaluate_predict_cv_pipeline -p glove_lstm -m first
 
 # neptune run \
 # --config best_configs/fasttext_scnn.yaml \
